@@ -121,6 +121,30 @@ html, body, [class*="css"]  { font-family:'Inter', sans-serif; }
 div[data-testid="stButton"] > button{
   border-radius:999px !important; font-weight:600 !important; font-size:13px !important;
 }
+
+/* ---------- CTA 버튼 (새 샘플 요청 등록하기) : 흰색 배경 + 검정 원형 아이콘 ---------- */
+.st-key-cta-request button{
+  background:#FFFFFF !important; border:1px solid var(--line) !important;
+  color:var(--ink) !important; box-shadow:0 1px 2px rgba(20,24,29,.08) !important;
+  position:relative !important; padding-left:40px !important;
+}
+.st-key-cta-request button:hover{ border-color:var(--ink-soft) !important; color:var(--ink) !important; }
+.st-key-cta-request button::before{
+  content:"+"; position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:20px; height:20px; border-radius:50%; background:var(--ink); color:#fff;
+  font-size:13px; font-weight:700; line-height:20px; text-align:center;
+}
+
+/* ---------- 검색창 (샘플 검색 입력창에만 적용) ---------- */
+div[data-testid="stTextInput"]:has(input[aria-label="샘플 검색"]){ position:relative; }
+input[aria-label="샘플 검색"]{
+  background:#FFFFFF !important; border-radius:999px !important;
+  border:1px solid var(--line) !important; padding-left:38px !important;
+}
+div[data-testid="stTextInput"]:has(input[aria-label="샘플 검색"])::before{
+  content:"🔍"; position:absolute; left:14px; top:50%;
+  transform:translateY(-50%); font-size:14px; z-index:2; pointer-events:none;
+}
 </style>
 """
 
@@ -223,8 +247,9 @@ st.markdown(f"""
 # CTA + 필터 버튼 (실제 Streamlit 위젯)
 cta_col = st.columns([1, 2, 1])[1]
 with cta_col:
-    if st.button("➕  새 샘플 요청 등록하기", use_container_width=True, type="primary"):
-        open_request_modal()
+    with st.container(key="cta-request"):
+        if st.button("새 샘플 요청 등록하기", use_container_width=True, type="secondary"):
+            open_request_modal()
 
 filter_options = ["전체"] + STAGES
 cols = st.columns(len(filter_options))
@@ -238,12 +263,20 @@ for col, opt in zip(cols, filter_options):
 
 st.write("")
 
+search_query = st.text_input(
+    "샘플 검색", placeholder="샘플명 또는 벤더명으로 검색",
+    label_visibility="collapsed",
+)
+
 # ---------------------------------------------------------------
 # 목록 (필터 적용)
 # ---------------------------------------------------------------
 current_filter = st.session_state.current_filter
 samples = st.session_state.samples
 filtered = samples if current_filter == "전체" else [s for s in samples if s["stage"] == current_filter]
+if search_query.strip():
+    q = search_query.strip().lower()
+    filtered = [s for s in filtered if q in s["name"].lower() or q in s["vendor"].lower()]
 
 label = "전체 샘플" if current_filter == "전체" else f"{current_filter} 샘플"
 st.markdown(f"""

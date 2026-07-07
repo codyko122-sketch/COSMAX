@@ -70,7 +70,7 @@ html, body, [class*="css"]  { font-family:'Inter', sans-serif; }
   font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700;
   line-height:1.25; margin:0 0 12px; letter-spacing:-0.01em;
 }
-.hero-sub{ font-size:15px; color:rgba(255,255,255,.75); max-width:520px; margin:0 auto 20px; line-height:1.6; }
+.hero-sub{ font-size:15px; color:rgba(255,255,255,.75); max-width:520px; margin:0 auto 20px; line-height:1.6; text-align:center; }
 
 .hero-tags{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; font-size:12.5px; margin-top:6px; }
 .tag-label{ color:rgba(255,255,255,.55); margin-right:2px; }

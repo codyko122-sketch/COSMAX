@@ -45,34 +45,65 @@ html, body, [class*="css"]  { font-family:'Inter', sans-serif; }
 #MainMenu, footer, header {visibility:hidden;}
 .block-container{ padding-top:0 !important; max-width:1180px; }
 
-/* ---------- hero ---------- */
-.hero{
+/* ---------- hero (필터/CTA 버튼을 히어로 내부에 포함) ---------- */
+.st-key-hero{
   position:relative; overflow:hidden; background:#101820;
   padding:34px 24px 30px; color:#fff; margin:0 -1rem 24px -1rem;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 20px 20px; text-align:center;
 }
+.st-key-hero [data-testid="stVerticalBlock"]{ gap:14px !important; }
 .hero-bg{
   position:absolute; inset:0;
   background:url('__HERO_BG_URL__') center/cover no-repeat;
   z-index:0;
 }
 .hero-overlay{ position:absolute; inset:0; background:rgba(10,14,18,.62); z-index:1; }
-.hero-inner{ max-width:880px; margin:0 auto; position:relative; z-index:2; text-align:center; }
+
+/* 배경/오버레이를 제외한 실제 콘텐츠(칩·필터·타이틀·CTA·통계)를 오버레이 위로 */
+.st-key-hero div[data-testid="stElementContainer"]:has(.brand-chip),
+.st-key-hero div[data-testid="stElementContainer"]:has(.hero-title),
+.st-key-hero div[data-testid="stElementContainer"]:has(.hero-tags),
+.st-key-hero .st-key-hero-filters,
+.st-key-hero .st-key-hero-cta{
+  position:relative; z-index:2;
+}
 
 .brand-chip{
   display:inline-flex; align-items:center; gap:7px; background:#fff;
-  border-radius:999px; padding:7px 18px; box-shadow:0 6px 18px rgba(0,0,0,.25); margin-bottom:18px;
+  border-radius:999px; padding:7px 18px; box-shadow:0 6px 18px rgba(0,0,0,.25);
 }
+.brand-icon{ width:20px; height:20px; flex-shrink:0; }
 .brand-text{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; color:var(--ink); }
 .brand-text b{ color:var(--terracotta); font-weight:700; }
 
+/* 히어로 상단 필터 버튼 (전체/요청/제작중/배송중/검수완료) */
+.st-key-hero-filters button{
+  background:rgba(255,255,255,.12) !important; border:1px solid rgba(255,255,255,.22) !important;
+  color:rgba(255,255,255,.9) !important; font-size:12.5px !important; padding:6px 6px !important;
+}
+.st-key-hero-filters button[kind="primary"]{
+  background:#fff !important; color:var(--ink) !important; border-color:#fff !important;
+}
+
 .hero-title{
   font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700;
-  line-height:1.25; margin:0 0 12px; letter-spacing:-0.01em;
+  line-height:1.25; margin:8px auto 12px; letter-spacing:-0.01em; max-width:720px;
 }
-.hero-sub{ font-size:15px; color:rgba(255,255,255,.75); max-width:520px; margin:0 auto 20px; line-height:1.6; }
+.hero-sub{ font-size:15px; color:rgba(255,255,255,.75); max-width:520px; margin:0 auto; line-height:1.6; }
 
-.hero-tags{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; font-size:12.5px; margin-top:6px; }
+/* 히어로 안의 CTA 버튼 (새 샘플 요청 등록하기) : 큰 흰색 바 + 검정 원형 아이콘 */
+.st-key-hero-cta button{
+  background:#fff !important; border:none !important; color:var(--ink) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.25) !important; padding:16px 20px 16px 44px !important;
+  font-size:14px !important; position:relative !important;
+}
+.st-key-hero-cta button::before{
+  content:"+"; position:absolute; left:16px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; border-radius:50%; background:var(--ink); color:#fff;
+  font-size:14px; font-weight:700; line-height:22px; text-align:center;
+}
+
+.hero-tags{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; font-size:12.5px; }
 .tag-label{ color:rgba(255,255,255,.55); margin-right:2px; }
 .tag-pill{ border:1px solid rgba(255,255,255,.25); color:rgba(255,255,255,.9); padding:6px 14px; border-radius:999px; }
 .tag-pill b{ font-family:'IBM Plex Mono',monospace; font-weight:600; }
@@ -122,29 +153,6 @@ div[data-testid="stButton"] > button{
   border-radius:999px !important; font-weight:600 !important; font-size:13px !important;
 }
 
-/* ---------- CTA 버튼 (새 샘플 요청 등록하기) : 흰색 배경 + 검정 원형 아이콘 ---------- */
-.st-key-cta-request button{
-  background:#FFFFFF !important; border:1px solid var(--line) !important;
-  color:var(--ink) !important; box-shadow:0 1px 2px rgba(20,24,29,.08) !important;
-  position:relative !important; padding-left:40px !important;
-}
-.st-key-cta-request button:hover{ border-color:var(--ink-soft) !important; color:var(--ink) !important; }
-.st-key-cta-request button::before{
-  content:"+"; position:absolute; left:12px; top:50%; transform:translateY(-50%);
-  width:20px; height:20px; border-radius:50%; background:var(--ink); color:#fff;
-  font-size:13px; font-weight:700; line-height:20px; text-align:center;
-}
-
-/* ---------- 검색창 (샘플 검색 입력창에만 적용) ---------- */
-div[data-testid="stTextInput"]:has(input[aria-label="샘플 검색"]){ position:relative; }
-input[aria-label="샘플 검색"]{
-  background:#FFFFFF !important; border-radius:999px !important;
-  border:1px solid var(--line) !important; padding-left:38px !important;
-}
-div[data-testid="stTextInput"]:has(input[aria-label="샘플 검색"])::before{
-  content:"🔍"; position:absolute; left:14px; top:50%;
-  transform:translateY(-50%); font-size:14px; z-index:2; pointer-events:none;
-}
 </style>
 """
 
@@ -224,15 +232,48 @@ def open_request_modal():
                 st.rerun()
 
 # ---------------------------------------------------------------
-# 헤더 (히어로 섹션)
+# 헤더 (히어로 섹션) : 필터 버튼과 CTA 버튼을 히어로 내부에 배치
 # ---------------------------------------------------------------
-st.markdown(f"""
-<div class="hero">
-  <span class="hero-bg"></span><span class="hero-overlay"></span>
-  <div class="hero-inner">
-    <div class="brand-chip"><span class="brand-text">COSMAX <b>TOOL</b></span></div>
+filter_options = ["전체"] + STAGES
+
+with st.container(key="hero"):
+    st.markdown('<span class="hero-bg"></span><span class="hero-overlay"></span>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="brand-chip">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10.5" stroke="#E2231A" stroke-width="1.4"/>
+        <path d="M12 4.2C8.4 4.2 5.8 6.9 5.8 10.2C5.8 12.3 7.1 13.6 9 13.6C10.6 13.6 11.6 12.5 11.6 11.1C11.6 9.9 10.8 9.1 9.7 9.1"
+              stroke="#E2231A" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M12 19.8C15.6 19.8 18.2 17.1 18.2 13.8C18.2 11.7 16.9 10.4 15 10.4C13.4 10.4 12.4 11.5 12.4 12.9C12.4 14.1 13.2 14.9 14.3 14.9"
+              stroke="#E2231A" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-text">COSMAX <b>TOOL</b></span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.container(key="hero-filters"):
+        widths = [2, 2, 3, 3, 4]
+        cols = st.columns([4] + widths + [4])
+        for col, opt in zip(cols[1:-1], filter_options):
+            with col:
+                is_active = st.session_state.current_filter == opt
+                if st.button(opt, key=f"filter_{opt}", use_container_width=True,
+                             type="primary" if is_active else "secondary"):
+                    st.session_state.current_filter = opt
+                    st.rerun()
+
+    st.markdown("""
     <h1 class="hero-title">패키징 샘플, 지금 어디 있는지<br>한눈에 확인하세요</h1>
     <p class="hero-sub">벤더에게 요청한 포장재 샘플이 지금 어느 단계인지, 더 이상 물어보지 않아도 됩니다.</p>
+    """, unsafe_allow_html=True)
+
+    with st.container(key="hero-cta"):
+        cta_col = st.columns([1, 2, 1])[1]
+        with cta_col:
+            if st.button("새 샘플 요청 등록하기", use_container_width=True, type="secondary"):
+                open_request_modal()
+
+    st.markdown(f"""
     <div class="hero-tags">
       <span class="tag-label">진행 현황</span>
       <span class="tag-pill">요청 <b>{stage_count('요청')}</b></span>
@@ -240,33 +281,7 @@ st.markdown(f"""
       <span class="tag-pill">배송중 <b>{stage_count('배송중')}</b></span>
       <span class="tag-pill">검수완료 <b>{stage_count('검수완료')}</b></span>
     </div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-# CTA + 필터 버튼 (실제 Streamlit 위젯)
-cta_col = st.columns([1, 2, 1])[1]
-with cta_col:
-    with st.container(key="cta-request"):
-        if st.button("새 샘플 요청 등록하기", use_container_width=True, type="secondary"):
-            open_request_modal()
-
-filter_options = ["전체"] + STAGES
-cols = st.columns(len(filter_options))
-for col, opt in zip(cols, filter_options):
-    with col:
-        is_active = st.session_state.current_filter == opt
-        if st.button(opt, key=f"filter_{opt}", use_container_width=True,
-                     type="primary" if is_active else "secondary"):
-            st.session_state.current_filter = opt
-            st.rerun()
-
-st.write("")
-
-search_query = st.text_input(
-    "샘플 검색", placeholder="샘플명 또는 벤더명으로 검색",
-    label_visibility="collapsed",
-)
+    """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------------
 # 목록 (필터 적용)
@@ -274,9 +289,6 @@ search_query = st.text_input(
 current_filter = st.session_state.current_filter
 samples = st.session_state.samples
 filtered = samples if current_filter == "전체" else [s for s in samples if s["stage"] == current_filter]
-if search_query.strip():
-    q = search_query.strip().lower()
-    filtered = [s for s in filtered if q in s["name"].lower() or q in s["vendor"].lower()]
 
 label = "전체 샘플" if current_filter == "전체" else f"{current_filter} 샘플"
 st.markdown(f"""
